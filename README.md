@@ -131,12 +131,5 @@ button:
     on_press:
       - script.execute: {id: send_command, command: 0x11, parameter: 0x06}
 
-  # Always sends quiet, even if the switch already reads off.
-  - platform: template
-    name: "Stand Force Quiet"
-    icon: mdi:volume-off
-    on_press:
-      - script.execute: {id: send_command, command: 0x10, parameter: 0}
-
 
 ```
