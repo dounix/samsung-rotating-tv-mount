@@ -13,6 +13,8 @@ That dump and Ghidra should be enough for a clanker to figure out the i2c comman
 
 Ripped and replaced the bluetooth module that connects to the i2c bus, but anything that can talk i2c will work.
 
+![BoardImage](board-physical.png)
+
 Using the original firmware, it's only a curiosity that the stepper motor is a HEM-60S1401, this is driven by a DRV8886AT stepper driver  
 
 ## Summary
