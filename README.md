@@ -29,9 +29,9 @@ Risk weighed against being a paperweight.
 
 ## Physics still apply
 
-Under the weight limit
-Central VESA mount/center of gravity
-Design that doesn't self destruct in portrait mode(cooling, etc).
+* Under the weight limit
+* Central VESA mount/center of gravity
+* Design that doesn't self destruct in portrait mode(cooling, etc).
 
 
 | | |
@@ -47,16 +47,14 @@ All values **hex**. Message format is `[command][parameter]`, two bytes.
 
 ### parameters
 
-Opcode **`0x11`** against 7-bit address **`0x41`** (`0x82` to write). The values below are
-**operands** — message byte 1 — not opcodes.
+Against 7-bit address **`0x41`** (`0x82` to write).
 
-| Param | Move | 90° |
-|---|---|---|
-| `0x01` | **portrait**, speed ramped | **~10 s** |
-| `0x02` | **landscape**, speed ramped | **~10 s** |
-| `0x05` | **portrait**, slow(homing speed) | ~35 s |
-| `0x06` | **landscape**, slow(homing speed) | ~35 s |
-
+| Command | Param | Move | 90° |
+|---|---|---|---|
+| `0x11` | `0x01` | **portrait**, speed ramped | **~10 s** |
+| `0x11` | `0x02` | **landscape**, speed ramped | **~10 s** |
+| `0x11` | `0x05` | **portrait**, slow(homing speed) | ~35 s |
+| `0x11` | `0x06` | **landscape**, slow(homing speed) | ~35 s |
 
 
 ## ESPHome configuration
