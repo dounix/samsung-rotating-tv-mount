@@ -5,17 +5,17 @@ Minimal reversing of the Samsung **VG-ARAB22WMTZA** auto-rotating wall mount
 
 ## Hardware 
 
-Has an STM32410CB, and a BT module with samsung pairing magic(AKA the rub).
+Has an STM32410CB, and a BT module with Samsung pairing magic(AKA the rub).
 The STM32 has no readout protection
-No intention to use the bluetooth, so should be a simple problem for the clankers with a bit of Ghidra help, it wasn't.
+No intention to use the Bluetooth, so should be a simple problem for the clankers with a bit of Ghidra help, it wasn't.
 
 I ripped and replaced the bluetooth module that connects to the I2C bus, but anything that can talk I2C could do similar.
 
-Since we use the origial firmware, it's only a curisotiy that the stepper motor is a HEM-60S1401/[FULLING] or FL63ST10, this is driven by a DRV8886AT stepper driver
+Since we use the original firmware, it's only a curiosity that the stepper motor is a HEM-60S1401/[FULLING] or FL63ST10, this is driven by a DRV8886AT stepper driver
 
 ## Summary
 
-The mount's STM32 takes rotation commands over I2C from supported TVs via the samsung bluetooth module.
+The mount's STM32 takes rotation commands over I2C from supported TVs via the Samsung Bluetooth module.
 I found a deal on this mount, and wanted to rotate a TV that is unsupported and couldn't pair.
 Didn't see these commands documented anywhere, hope this save someone a bit of time
 
@@ -28,7 +28,7 @@ TV's need to have a central VESA mount/center of gravity, and designs that allow
 |---|---|
 | **Bus** | I²C1, 400 kHz, slave address **0x41** |
 | **easy SDA/SCL access** | **CN302 pins 2/3** — an unpopulated header next to the opto encoder port |
-| **Power** | Pick up vcc/gnd where ever you get your microcontrooller supplies |
+| **Power** | Pick up vcc/gnd where ever you get your microcontroller supplies |
 | **What works** | slow rotation(35s) this is homing speed, ramped "fast" rotation(10s) |
 
 ## Bus commands
