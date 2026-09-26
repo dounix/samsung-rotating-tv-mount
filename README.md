@@ -1,4 +1,4 @@
-# Samsung rotating TV mount VG-ARAB22WMTZA esphome control with esp32, or anything i2c
+# Samsung rotating TV mount VG-ARAB22WMTZA home assistant via esphome control with esp32, or anything i2c
 
 Minimal reversing of the Samsung **VG-ARAB22WMTZA** auto-rotating wall mount
 
