@@ -20,6 +20,10 @@ The mount's STM32 takes rotation commands over I2C from supported TVs via the Sa
 I found a deal on this mount, and wanted to rotate a TV that is unsupported and couldn't pair.  
 Didn't see these commands documented anywhere, hope this save someone a bit of time  
 
+## Power budget
+
+Not considered, no brownouts, but the ESP32 does use more power than any BT module.  Weighed against being a paperweight.
+
 ## Physics still apply
 
 TV's need to have a central VESA mount/center of gravity, and designs that allow cooling when rotated.
@@ -36,7 +40,7 @@ TV's need to have a central VESA mount/center of gravity, and designs that allow
 
 All values **hex**. Message format is `[command][parameter]`, two bytes.
 
-### `SET_MOVE` parameters
+### parameters
 
 Opcode **`0x11`** against 7-bit address **`0x41`** (`0x82` to write). The values below are
 **operands** — message byte 1 — not opcodes.
