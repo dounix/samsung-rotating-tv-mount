@@ -1,32 +1,35 @@
-# Samsung rotating TV mount VG-ARAB22WMTZA home assistant via esphome control with esp32, or anything i2c
+## Samsung rotating TV mount control with home assistant via esphome
 
-Minimal reversing of the Samsung **VG-ARAB22WMTZA** auto-rotating wall mount
+Tested with model VG-ARAB43WMT(400x300 VESA), but assume VG-ARAB22WMTZA(200x200 VESA mount) is the same
+Control with esp32, or anything i2c
 
+### Hardware 
 
-## Hardware 
+Has an STM32410CB, and a BT module connected via FFC cable.
+The BT seems to do some Samsung pairing/commands that were not investigated.
 
-Has an STM32410CB, and a BT module with Samsung pairing magic(AKA the rub).
-The STM32 has no readout protection
-No intention to use the Bluetooth, so should be a simple problem for the clankers with a bit of Ghidra help.  
-It wasn't.
+The STM32 has no readout protection, dumpable with a cheap st-link clone.
+That dump and Ghidra should be enough for a clanker to figure out the i2c commands, but it wasn't.
 
-I ripped and replaced the bluetooth module that connects to the I2C bus, but anything that can talk I2C could do similar.  
+Ripped and replaced the bluetooth module that connects to the i2c bus, but anything that can talk i2c will work.
 
-Since we use the original firmware, it's only a curiosity that the stepper motor is a HEM-60S1401/[FULLING] or FL63ST10, this is driven by a DRV8886AT stepper driver  
+Using the original firmware, it's only a curiosity that the stepper motor is a HEM-60S1401, this is driven by a DRV8886AT stepper driver  
 
 ## Summary
-
 The mount's STM32 takes rotation commands over I2C from supported TVs via the Samsung Bluetooth module.  
-I found a deal on this mount, and wanted to rotate a TV that is unsupported and couldn't pair.  
+I found a deal on this mount, and wanted to rotate a TV that is unsupported via homeassistant.
 Didn't see these commands documented anywhere, hope this save someone a bit of time  
 
 ## Power budget
 
-Not considered, no brownouts, but the ESP32 does use more power than any BT module.  Weighed against being a paperweight.
+Not considered, no brownouts, but the ESP32 does use more power than any BT module.  
+Risk weighed against being a paperweight.
 
 ## Physics still apply
 
-TV's need to have a central VESA mount/center of gravity, and designs that allow cooling when rotated.
+Under the weight limit
+Central VESA mount/center of gravity
+Design that doesn't self destruct in portrait mode(cooling, etc).
 
 
 | | |
@@ -47,10 +50,10 @@ Opcode **`0x11`** against 7-bit address **`0x41`** (`0x82` to write). The values
 
 | Param | Move | 90° |
 |---|---|---|
-| `0x01` | **portrait**, ramped | **~10 s** |
-| `0x02` | **landscape**, ramped | **~10 s** |
-| `0x05` | **portrait**, slow | ~35 s |
-| `0x06` | **landscape**, slow | ~35 s |
+| `0x01` | **portrait**, speed ramped | **~10 s** |
+| `0x02` | **landscape**, speed ramped | **~10 s** |
+| `0x05` | **portrait**, slow(homing speed) | ~35 s |
+| `0x06` | **landscape**, slow(homing speed) | ~35 s |
 
 
 
