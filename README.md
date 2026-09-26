@@ -7,17 +7,18 @@ Minimal reversing of the Samsung **VG-ARAB22WMTZA** auto-rotating wall mount
 
 Has an STM32410CB, and a BT module with Samsung pairing magic(AKA the rub).
 The STM32 has no readout protection
-No intention to use the Bluetooth, so should be a simple problem for the clankers with a bit of Ghidra help, it wasn't.
+No intention to use the Bluetooth, so should be a simple problem for the clankers with a bit of Ghidra help.  
+It wasn't.
 
-I ripped and replaced the bluetooth module that connects to the I2C bus, but anything that can talk I2C could do similar.
+I ripped and replaced the bluetooth module that connects to the I2C bus, but anything that can talk I2C could do similar.  
 
-Since we use the original firmware, it's only a curiosity that the stepper motor is a HEM-60S1401/[FULLING] or FL63ST10, this is driven by a DRV8886AT stepper driver
+Since we use the original firmware, it's only a curiosity that the stepper motor is a HEM-60S1401/[FULLING] or FL63ST10, this is driven by a DRV8886AT stepper driver  
 
 ## Summary
 
-The mount's STM32 takes rotation commands over I2C from supported TVs via the Samsung Bluetooth module.
-I found a deal on this mount, and wanted to rotate a TV that is unsupported and couldn't pair.
-Didn't see these commands documented anywhere, hope this save someone a bit of time
+The mount's STM32 takes rotation commands over I2C from supported TVs via the Samsung Bluetooth module.  
+I found a deal on this mount, and wanted to rotate a TV that is unsupported and couldn't pair.  
+Didn't see these commands documented anywhere, hope this save someone a bit of time  
 
 ## Physics still apply
 
