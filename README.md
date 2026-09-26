@@ -13,7 +13,6 @@ That dump and Ghidra should be enough for a clanker to figure out the i2c comman
 
 Ripped and replaced the bluetooth module that connects to the i2c bus, but anything that can talk i2c will work.
 
-![BoardImage](board-physical.png)
 
 Using the original firmware, it's only a curiosity that the stepper motor is a HEM-60S1401, this is driven by a DRV8886AT stepper driver  
 
@@ -34,20 +33,16 @@ Risk weighed against being a paperweight.
 * Design that doesn't self destruct in portrait mode(cooling, etc).
 
 
-| | |
-|---|---|
-| **Bus** | I²C1, 400 kHz, slave address **0x41** |
-| **easy SDA/SCL access** | **CN302 pins 2/3** — an unpopulated header next to the opto encoder port |
-| **Power** | Pick up vcc/gnd where ever you get your microcontroller supplies |
-| **What works** | slow rotation(35s) this is homing speed, ramped "fast" rotation(10s) |
+## Hookup
+**easy SDA/SCL access** **CN302 pins 2/3** — an unpopulated header next to the opto encoder port  
+**Power**  Pick up vcc/gnd where ever you get your microcontroller supplies
+![BoardImage](board-physical.png)
+
+
 
 ## Bus commands
 
-All values **hex**. Message format is `[command][parameter]`, two bytes.
-
-### parameters
-
-Against 7-bit address **`0x41`** (`0x82` to write).
+i2c@400Khz against 7-bit address **`0x41`** (`0x82` to write) .
 
 | Command | Param | Move | 90° |
 |---|---|---|---|
