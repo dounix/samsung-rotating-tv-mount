@@ -1,0 +1,139 @@
+# Samsung rotating TV mount VG-ARAB22WMTZA esphome control with esp32, or anything i2c
+
+Minimal reversing of the Samsung **VG-ARAB22WMTZA** auto-rotating wall mount
+
+
+## Hardware 
+
+Has an STM32410CB, and a BT module with samsung pairing magic(AKA the rub).
+The STM32 has no readout protection
+No intention to use the bluetooth, so should be a simple problem for the clankers with a bit of Ghidra help, it wasn't.
+
+I ripped and replaced the bluetooth module that connects to the I2C bus, but anything that can talk I2C could do similar.
+
+Since we use the origial firmware, it's only a curisotiy that the stepper motor is a HEM-60S1401/[FULLING] or FL63ST10, this is driven by a DRV8886AT stepper driver
+
+## Summary
+
+The mount's STM32 takes rotation commands over I2C from supported TVs via the samsung bluetooth module.
+I found a deal on this mount, and wanted to rotate a TV that is unsupported and couldn't pair.
+Didn't see these commands documented anywhere, hope this save someone a bit of time
+
+## Physics still apply
+
+TV's need to have a central VESA mount/center of gravity, and designs that allow cooling when rotated.
+
+
+| | |
+|---|---|
+| **Bus** | I²C1, 400 kHz, slave address **0x41** |
+| **easy SDA/SCL access** | **CN302 pins 2/3** — an unpopulated header next to the opto encoder port |
+| **Power** | Pick up vcc/gnd where ever you get your microcontrooller supplies |
+| **What works** | slow rotation(35s) this is homing speed, ramped "fast" rotation(10s) |
+
+## Bus commands
+
+All values **hex**. Message format is `[command][parameter]`, two bytes.
+
+### `SET_MOVE` parameters
+
+Opcode **`0x11`** against 7-bit address **`0x41`** (`0x82` to write). The values below are
+**operands** — message byte 1 — not opcodes.
+
+| Param | Move | 90° |
+|---|---|---|
+| `0x01` | **portrait**, ramped | **~10 s** |
+| `0x02` | **landscape**, ramped | **~10 s** |
+| `0x05` | **portrait**, slow | ~35 s |
+| `0x06` | **landscape**, slow | ~35 s |
+
+
+
+## ESPHome configuration
+
+```yaml
+esphome:
+  name: rotato
+  friendly_name: rotato
+
+esp32:
+  variant: esp32
+
+logger:
+
+api:
+  encryption:
+    key: "REPLACE_WITH_YOUR_OWN_KEY"      # generate: openssl rand -base64 32
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: rotato Fallback Hotspot
+    password: "REPLACE_WITH_YOUR_OWN_PASSWORD"
+
+captive_portal:
+
+i2c:
+  id: rotato_i2c
+  sda: GPIO16
+  scl: GPIO17
+  frequency: 400kHz
+  timeout: 13ms          # clock-stretch limit; 13ms is the esp-idf maximum
+  scan: true             # logs what answered at boot — expect 0x41
+
+script:
+  - id: send_command
+    parameters:
+      command: int
+      parameter: int
+    mode: queued
+    then:
+      - lambda: |-
+          const uint8_t message[2] = {(uint8_t) command, (uint8_t) parameter};
+          auto err = id(rotato_i2c)->write(0x41, message, sizeof(message));
+          if (err != i2c::ERROR_OK) {
+            ESP_LOGE("stand", "command 0x%02X param 0x%02X failed, i2c error %d",
+                     (unsigned) command, (unsigned) parameter, (int) err);
+          } else {
+            ESP_LOGI("stand", "command 0x%02X param 0x%02X sent",
+                     (unsigned) command, (unsigned) parameter);
+          }
+
+button:
+  - platform: template
+    name: "Stand Portrait"
+    icon: mdi:phone-rotate-portrait
+    on_press:
+      - script.execute: {id: send_command, command: 0x11, parameter: 0x01}
+
+  - platform: template
+    name: "Stand Landscape"
+    icon: mdi:phone-rotate-landscape
+    on_press:
+      - script.execute: {id: send_command, command: 0x11, parameter: 0x02}
+
+  - platform: template
+    name: "Stand Slow Portrait"
+    icon: mdi:phone-rotate-portrait
+    on_press:
+      - script.execute: {id: send_command, command: 0x11, parameter: 0x05}
+
+  - platform: template
+    name: "Stand Slow Landscape"
+    icon: mdi:phone-rotate-landscape
+    on_press:
+      - script.execute: {id: send_command, command: 0x11, parameter: 0x06}
+
+  # Always sends quiet, even if the switch already reads off.
+  - platform: template
+    name: "Stand Force Quiet"
+    icon: mdi:volume-off
+    on_press:
+      - script.execute: {id: send_command, command: 0x10, parameter: 0}
+
+
+```
